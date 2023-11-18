@@ -1,12 +1,20 @@
-NAME= 
+NAME= bank
 
+SRC = main.cpp
 
-all:
+OBJ = $(SRC:.cpp=.o)
 
-$(NAME):
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
-clean:
+$(NAME): $(OBJ)
+	c++ $(CPPFLAGS) $(OBJ) -o $(NAME)
 
-fclean:
+all: $(NAME)
 
-re:
+clean:	
+	rm -rf $(OBJ)
+
+fclean: clean
+	rm -rf $(NAME)
+
+re:	fclean all
