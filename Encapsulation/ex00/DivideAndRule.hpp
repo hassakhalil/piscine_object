@@ -1,5 +1,5 @@
-#ifndef DIVIDEANDRULE_HPP
-#define DIVIDEANDRULE_HPP
+#ifndef DIVIDEANDRULE_H
+#define DIVIDEANDRULE_H
 
 #include <iostream>
 #include <vector>
