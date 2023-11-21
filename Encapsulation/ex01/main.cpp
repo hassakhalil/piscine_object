@@ -10,11 +10,11 @@ int main(int ac, char **av)
             std::cerr << "Usage: ./graph [input_file]" << std::endl;
             return (1);
         }
-
-        graph.addPoint(0, 0);
-        graph.addPoint(2, 2);
-        graph.addPoint(4, 2);
-        graph.addPoint(2, 4);
+        
+        graph.addPoint(Vector2(0, 0));
+        graph.addPoint(Vector2(2, 2));
+        graph.addPoint(Vector2(4, 2));
+        graph.addPoint(Vector2(2, 4));
         // graph.addPoint(1.2, 1.2);
         // graph.addPoint(1.5, 1.5);
         // graph.addPoint(0, 3);

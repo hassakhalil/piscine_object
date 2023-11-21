@@ -11,6 +11,15 @@
 #include <string>
 #include <sstream>
 
+struct Vector2{
+    public:
+        float x;
+        float y;
+        
+        Vector2(): x(0), y(0){}
+        Vector2(float x, float y): x(x), y(y){}
+};
+
 
 class Graph {
 
@@ -18,38 +27,38 @@ class Graph {
 
     private:
         int size;
-        std::vector<std::pair<float,float> > Vector2;
+        std::vector<Vector2 > graphPoints;
 
     public:
         Graph(): size(0){}
         ~Graph(){}
         //add a method to add a point to the graph
-        void addPoint(float x, float y){
+        void addPoint(Vector2 point){
             //check for negative numbers
-            if (x < 0 || y < 0)
+            if (point.x < 0 || point.y < 0)
                 throw std::invalid_argument("Failed to add point: Invalid coordinates");
-            Vector2.push_back(std::make_pair(x,y));
+            graphPoints.push_back(point);
             size++;
         }
         //add a method to output the graph in the terminal
 
         bool checkforPoint(float x, float y, float x_step, float y_step){
-            for (int i=0; i < (int)Vector2.size(); i++){
+            for (int i=0; i < (int)graphPoints.size(); i++){
                 //check if there is a close point
                 //first check if the x is close
-                float x_tmp1 = fabs(Vector2[i].first - x);
+                float x_tmp1 = fabs(graphPoints[i].x - x);
                 if (x_tmp1 < x_step)
                 {
                     //check x for next  and previous points and campare the result
-                    float x_tmp2 = fabs((x + x_step) - Vector2[i].first);
-                    float x_tmp3 = fabs((x - x_step) - Vector2[i].first);
+                    float x_tmp2 = fabs((x + x_step) - graphPoints[i].x);
+                    float x_tmp3 = fabs((x - x_step) - graphPoints[i].x);
                     if (x_tmp2 < x_tmp1 || x_tmp3 < x_tmp1)
                         continue;
                     //check if the y is close
-                    float y_tmp1 = fabs(Vector2[i].second - y);
+                    float y_tmp1 = fabs(graphPoints[i].y - y);
                     if (y_tmp1 < y_step){
-                        float y_tmp2 = fabs((y - y_step) - Vector2[i].second);
-                        float y_tmp3 = fabs((y + y_step) - Vector2[i].second);
+                        float y_tmp2 = fabs((y - y_step) - graphPoints[i].y);
+                        float y_tmp3 = fabs((y + y_step) - graphPoints[i].y);
                         if (y_tmp3 < y_tmp1 || y_tmp2 <  y_tmp1)
                             continue;
                     //debug
@@ -72,13 +81,13 @@ class Graph {
             float max_y = 0;
             std::vector<float> x_axis;
             std::vector<float> y_axis;
-            for (int i=0; i < (int)Vector2.size(); i++){
-                if (Vector2[i].first > max_x)
-                    max_x = Vector2[i].first;
-                if (Vector2[i].second > max_y)
-                    max_y = Vector2[i].second;
-                x_axis.push_back(Vector2[i].first);
-                y_axis.push_back(Vector2[i].second);
+            for (int i=0; i < (int)graphPoints.size(); i++){
+                if (graphPoints[i].x > max_x)
+                    max_x = graphPoints[i].x;
+                if (graphPoints[i].y > max_y)
+                    max_y = graphPoints[i].y;
+                x_axis.push_back(graphPoints[i].x);
+                y_axis.push_back(graphPoints[i].y);
             }
             //calculate the x step and  y step
             max_x += 1;
@@ -162,13 +171,22 @@ class Graph {
                 //debug
                 std::cerr<<"x: "<<x<<" y: "<<y<<std::endl;
                 //end debug
-                if(sep.compare(","))
+                if(sep.compare(",")){
+                    file.close();
                     throw std::invalid_argument("Failed to read input file: Invalid separator");
-                else if (x < 0 || y < 0 )
+                }
+                else if (x < 0 || y < 0 ){
+                    file.close();
                     throw std::invalid_argument("Failed to read input file: Invalid coordinates");
-                addPoint(x, y);
+                }
+                Vector2 point(x, y);
+                addPoint(point);
             }
             file.close();
+        }
+
+        void generatePNG(){
+
         }
 };
 #endif
