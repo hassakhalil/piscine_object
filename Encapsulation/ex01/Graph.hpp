@@ -7,6 +7,9 @@
 #include <iostream> 
 #include <iomanip>
 #include <cmath>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 
 class Graph {
@@ -22,6 +25,9 @@ class Graph {
         ~Graph(){}
         //add a method to add a point to the graph
         void addPoint(float x, float y){
+            //check for negative numbers
+            if (x < 0 || y < 0)
+                throw std::invalid_argument("Failed to add point: Invalid coordinates");
             Vector2.push_back(std::make_pair(x,y));
             size++;
         }
@@ -58,9 +64,10 @@ class Graph {
             }
             return false;
         }
+
         void printGraph(){
-            //step one : drawing the graph without points
             //get the max value of x and y
+            
             float max_x = 0;
             float max_y = 0;
             std::vector<float> x_axis;
@@ -88,13 +95,6 @@ class Graph {
                 if (y_tmp < y_step && y_tmp != 0 )
                     y_step = y_tmp;
             }
-            //debug
-            // std::cout<<"size == "<<size<<std::endl;
-            // std::cout<<"max_x: "<<max_x<<std::endl;
-            // std::cout<<"max_y: "<<max_y<<std::endl;
-            // std::cout<<"step_x: "<<x_step<<std::endl;
-            // std::cout<<"step_y: "<<y_step<<std::endl;
-            //end debug
             //draw the graph
             while(max_y > 0){
                 //draw y axis
@@ -112,6 +112,7 @@ class Graph {
                 std::cout<<std::endl;
                 max_y -= y_step;
             }
+            //last line of points
             //draw y axis
             std::cout<<std::setw(4)<<'0';
             //draw points 
@@ -134,6 +135,40 @@ class Graph {
                 i += x_step;
             }
 
+        }
+
+
+        //add method to read input file
+        void readInputFile(std::string filename){
+            //read file line by line
+            //add point to the graph
+            std::fstream file(filename);
+            std::string buff;
+
+            if (!file.is_open())
+                throw std::invalid_argument("Failed to read input file: Invalid file");
+
+            while(getline(file, buff)){
+                //pase the line and get the x and y
+                std::istringstream ss(buff);
+                std::string xAsString;
+                std::string yAsString;
+                std::string sep;
+
+                ss>>xAsString>>sep>>yAsString;
+                //convert the strings to floats + check if the sep is a comma
+                float x = std::stof(xAsString);
+                float y = std::stof(yAsString);
+                //debug
+                std::cerr<<"x: "<<x<<" y: "<<y<<std::endl;
+                //end debug
+                if(sep.compare(","))
+                    throw std::invalid_argument("Failed to read input file: Invalid separator");
+                else if (x < 0 || y < 0 )
+                    throw std::invalid_argument("Failed to read input file: Invalid coordinates");
+                addPoint(x, y);
+            }
+            file.close();
         }
 };
 #endif
